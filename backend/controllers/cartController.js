@@ -304,10 +304,14 @@ exports.clearCart = async (req, res) => {
     
     await cart.save();
 
+    // Calculate cart totals (should be zero)
+    const cartTotals = calculateCartTotals(cart.items);
+
     res.status(200).json({
       success: true,
       message: 'Cart cleared',
-      cart
+      cart,
+      totals: cartTotals
     });
   } catch (error) {
     res.status(500).json({

@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCart, addToCart, removeFromCart, clearCart } = require('../controllers/cartController');
+const { getCart, addToCart, removeFromCart, clearCart, updateQuantity } = require('../controllers/cartController');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
@@ -10,6 +10,7 @@ router.use(protect);
 // Cart routes
 router.get('/', getCart);
 router.post('/', addToCart);
+router.put('/', updateQuantity);
 router.delete('/:productId', removeFromCart);
 router.delete('/', clearCart);
 
