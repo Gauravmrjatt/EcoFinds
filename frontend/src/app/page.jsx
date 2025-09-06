@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import FloatingPaths  from "@/components/FloatingPaths";
 
 export default function Home() {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-muted to-background py-12 sm:py-16 lg:py-20 min-h-[80vh]">
+      <section className="bg-gradient-to-b from-muted/70 to-background/70 py-12 sm:py-16 lg:py-20 min-h-[100vh] justify-center items-center flex">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-12 lg:gap-8">
             <div className="sm:text-center md:max-w-2xl md:mx-auto lg:col-span-6 lg:text-left">
@@ -31,12 +32,12 @@ export default function Home() {
             </div>
             <div className="mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
               <div className="relative mx-auto w-full rounded-lg shadow-none lg:max-w-md">
-                <div className="relative block w-full rounded-lg overflow-hidden">
+                <div className="relative block w-full rounded-lg overflow-hidden ">
                   <Image
                     src="/home.svg"
                     alt="Eco-friendly products"
                     width={500}
-                    height={300}
+                    height={500}
                     className="w-full"
                     priority
                     unoptimized
@@ -45,6 +46,10 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="absolute inset-0 -z-1">
+          <FloatingPaths position={1} />
+          <FloatingPaths position={-1} />
         </div>
       </section>
 
@@ -125,11 +130,11 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary/50">
+      <section className="bg-primary/10">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-3xl font-extrabold tracking-tight text-primary-foreground sm:text-4xl">
-            <span className="block">Ready to make a difference?</span>
-            <span className="block text-secondary-foreground">Start your sustainable journey today.</span>
+            <span className="block text-secondary-foreground">Ready to make a difference?</span>
+            <span className="block text-secondary-foreground/80">Start your sustainable journey today.</span>
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">

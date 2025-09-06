@@ -81,24 +81,45 @@ exports.getUserPurchases = async (req, res) => {
     const purchases = await Purchase.find({ buyer: req.user.id })
       .populate({
         path: 'product',
-        select: 'title price images'
+        select: 'title price images description category status createdAt',
+        populate: {
+          path: 'seller',
+          select: 'username email'
+        }
       })
       .populate({
         path: 'seller',
-        select: 'username'
+        select: 'username email profileImage'
       })
-      .sort({ purchaseDate: -1 });
+      .sort({ purchaseDate: -1 })
+      .lean(); // Use lean for better performance
+
+    // Handle case where product might be deleted but purchase record exists
+    const processedPurchases = purchases.map(purchase => {
+      if (!purchase.product) {
+        purchase.product = {
+          title: 'Product No Longer Available',
+          price: purchase.price,
+          images: [],
+          description: 'This product is no longer available',
+          category: 'Other',
+          status: 'unavailable'
+        };
+      }
+      return purchase;
+    });
 
     res.status(200).json({
       success: true,
-      count: purchases.length,
-      purchases
+      count: processedPurchases.length,
+      purchases: processedPurchases
     });
   } catch (error) {
+    console.error('Error fetching user purchases:', error);
     res.status(500).json({
       success: false,
-      message: 'Server Error',
-      error: error.message
+      message: 'Failed to fetch purchase history',
+      error: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
     });
   }
 };
@@ -111,24 +132,41 @@ exports.getUserSales = async (req, res) => {
     const sales = await Purchase.find({ seller: req.user.id })
       .populate({
         path: 'product',
-        select: 'title price images'
+        select: 'title price images description category status createdAt'
       })
       .populate({
         path: 'buyer',
-        select: 'username'
+        select: 'username email profileImage'
       })
-      .sort({ purchaseDate: -1 });
+      .sort({ purchaseDate: -1 })
+      .lean();
+
+    // Handle case where product might be deleted but purchase record exists
+    const processedSales = sales.map(sale => {
+      if (!sale.product) {
+        sale.product = {
+          title: 'Product No Longer Available',
+          price: sale.price,
+          images: [],
+          description: 'This product is no longer available',
+          category: 'Other',
+          status: 'unavailable'
+        };
+      }
+      return sale;
+    });
 
     res.status(200).json({
       success: true,
-      count: sales.length,
-      sales
+      count: processedSales.length,
+      sales: processedSales
     });
   } catch (error) {
+    console.error('Error fetching user sales:', error);
     res.status(500).json({
       success: false,
-      message: 'Server Error',
-      error: error.message
+      message: 'Failed to fetch sales history',
+      error: process.env.NODE_ENV === 'production' ? 'Internal server error' : error.message
     });
   }
 };

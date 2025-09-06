@@ -23,9 +23,29 @@ const UserSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false
   },
+  firstName: {
+    type: String,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    trim: true
+  },
+  phone: {
+    type: String,
+    trim: true
+  },
+  bio: {
+    type: String,
+    maxlength: [500, 'Bio cannot be more than 500 characters']
+  },
+  avatar: {
+    type: String,
+    default: 'https://via.placeholder.com/150x150/4F46E5/ffffff?text=User'
+  },
   profileImage: {
     type: String,
-    default: 'default-profile.jpg'
+    default: 'https://via.placeholder.com/150x150/4F46E5/ffffff?text=User'
   },
   createdAt: {
     type: Date,
