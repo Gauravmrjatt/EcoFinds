@@ -15,7 +15,7 @@ export default function LoginPage() {
     email: '',
     password: '',
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState({});
   const { login, loading, isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -41,7 +41,7 @@ export default function LoginPage() {
   };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors= {};
 
     if (!formData.email) {
       newErrors.email = 'Email is required';
@@ -57,7 +57,7 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
