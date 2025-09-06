@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function RegisterPage() {
@@ -98,7 +99,7 @@ export default function RegisterPage() {
             <CardTitle className="text-center text-2xl font-bold">Create your account</CardTitle>
             <CardDescription className="text-center mt-2">
               Already have an account?{' '}
-              <Link href="/auth/login" className="text-green-600 hover:text-green-500">
+              <Link href="/auth/login" className="text-primary hover:underline">
                 Sign in
               </Link>
             </CardDescription>
@@ -114,11 +115,11 @@ export default function RegisterPage() {
                 placeholder="Enter your username"
                 value={formData.username}
                 onChange={handleChange}
-                className={errors.username ? 'border-red-500' : ''}
+                className={errors.username ? 'border-destructive' : ''}
                 required
               />
               {errors.username && (
-                <p className="text-sm text-red-500">{errors.username}</p>
+                <p className="text-sm text-destructive">{errors.username}</p>
               )}
             </div>
 
@@ -131,11 +132,11 @@ export default function RegisterPage() {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                className={errors.email ? 'border-red-500' : ''}
+                className={errors.email ? 'border-destructive' : ''}
                 required
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p className="text-sm text-destructive">{errors.email}</p>
               )}
             </div>
 
@@ -148,11 +149,11 @@ export default function RegisterPage() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
-                className={errors.password ? 'border-red-500' : ''}
+                className={errors.password ? 'border-destructive' : ''}
                 required
               />
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
+                <p className="text-sm text-destructive">{errors.password}</p>
               )}
             </div>
 
@@ -165,43 +166,42 @@ export default function RegisterPage() {
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={errors.confirmPassword ? 'border-red-500' : ''}
+                className={errors.confirmPassword ? 'border-destructive' : ''}
                 required
               />
               {errors.confirmPassword && (
-                <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+                <p className="text-sm text-destructive">{errors.confirmPassword}</p>
               )}
             </div>
 
-            <div className="flex items-center">
-              <input
+            <div className="flex items-center space-x-2">
+              <Checkbox
                 id="terms"
-                name="terms"
-                type="checkbox"
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
                 required
               />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
                 I agree to the{' '}
-                <Link href="#" className="font-medium text-green-600 hover:text-green-500">
+                <Link href="#" className="font-medium text-primary hover:underline">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link href="#" className="font-medium text-green-600 hover:text-green-500">
+                <Link href="#" className="font-medium text-primary hover:underline">
                   Privacy Policy
                 </Link>
               </label>
             </div>
 
             {errors.form && (
-              <div className="text-red-500 text-sm mt-2">{errors.form}</div>
+              <div className="text-destructive text-sm mt-2">{errors.form}</div>
             )}
 
             <div>
               <Button
-                
                 type="submit"
-                className="w-full bg-green-600 text-white hover:bg-green-600/80"
+                className="w-full"
                 disabled={loading}
               >
                 {loading ? 'Creating account...' : 'Create account'}

@@ -4,7 +4,7 @@ import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "@/components/ui/sonner";
-
+import { ThemeProvider } from "@/components/theme-provider"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -22,7 +22,7 @@ export const metadata = {
 
 export default function RootLayout({
   children,
-} ){
+}) {
   return (
     <html lang="en">
       <body
@@ -30,7 +30,14 @@ export default function RootLayout({
       >
         <AuthProvider>
           <MainLayout>
-            {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
           </MainLayout>
           <Toaster />
         </AuthProvider>

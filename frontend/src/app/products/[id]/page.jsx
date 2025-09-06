@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-
 export default function ProductPage({ params }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,7 +60,7 @@ export default function ProductPage({ params }) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       </div>
     );
@@ -71,8 +70,8 @@ export default function ProductPage({ params }) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Product not found</h2>
-          <p className="text-gray-500 mb-8">The product you're looking for doesn't exist or has been removed.</p>
+          <h2 className="text-2xl font-bold text-foreground mb-4">Product not found</h2>
+          <p className="text-muted-foreground mb-8">The product you're looking for doesn't exist or has been removed.</p>
           <Button asChild>
             <Link href="/products">Back to Products</Link>
           </Button>
@@ -83,17 +82,17 @@ export default function ProductPage({ params }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Back Button */}
       <div className="mb-6">
         <Link
           href="/products"
-          className="text-green-600 hover:text-green-800 flex items-center"
+          className="text-primary hover:text-primary/80 flex items-center"
         >
           <svg
             className="w-5 h-5 mr-1"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               strokeLinecap="round"
@@ -109,7 +108,7 @@ export default function ProductPage({ params }) {
       <div className="lg:grid lg:grid-cols-2 lg:gap-x-8">
         {/* Product Image */}
         <div className="lg:max-w-lg lg:self-end">
-          <div className="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden">
+          <div className="aspect-square rounded-lg overflow-hidden">
             <Image
               src={product.images[0]}
               alt={product.title}
@@ -122,32 +121,30 @@ export default function ProductPage({ params }) {
         </div>
 
         {/* Product Details */}
-        <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
+        <div className="mt-10 sm:mt-16 lg:mt-0">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
             {product.title}
           </h1>
           
           <div className="mt-3">
-            <p className="text-sm text-gray-500">Category: {product.category || 'Uncategorized'}</p>
+            <p className="text-sm text-muted-foreground">Category: {product.category || 'Uncategorized'}</p>
           </div>
 
           <div className="mt-3">
-            <h2 className="sr-only">Product information</h2>
-            <p className="text-3xl text-gray-900">${product.price?.toFixed(2) || '0.00'}</p>
+            <p className="text-3xl font-semibold text-foreground">₹{product.price?.toFixed(2) || '0.00'}</p>
           </div>
 
           <div className="mt-6">
-            <h3 className="sr-only">Description</h3>
-            <p className="text-base text-gray-700">{product.description}</p>
+            <p className="text-base text-muted-foreground">{product.description}</p>
           </div>
 
           <div className="mt-6">
-            <p className="text-sm text-gray-500">Listed on: {new Date(product.createdAt).toLocaleDateString()}</p>
+            <p className="text-sm text-muted-foreground">Listed on: {new Date(product.createdAt).toLocaleDateString()}</p>
           </div>
 
           <div className="mt-6">
             <div className="flex space-x-3">
-              <Button className="bg-green-600 text-white hover:bg-green-600/80" size="lg" onClick={addToCart}>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90" size="lg" onClick={addToCart}>
                 Add to Cart
               </Button>
               <Button variant="outline" size="lg">
@@ -156,10 +153,10 @@ export default function ProductPage({ params }) {
             </div>
           </div>
 
-          {product.features && product.features.length > 0 && (
+          {product.features?.length > 0 && (
             <div className="mt-10">
-              <h2 className="text-lg font-medium text-gray-900">Features</h2>
-              <ul className="mt-4 pl-4 list-disc text-sm text-gray-700 space-y-2">
+              <h2 className="text-lg font-medium text-foreground">Features</h2>
+              <ul className="mt-4 pl-4 list-disc text-sm text-muted-foreground space-y-2">
                 {product.features.map((feature, index) => (
                   <li key={index}>{feature}</li>
                 ))}
@@ -167,16 +164,17 @@ export default function ProductPage({ params }) {
             </div>
           )}
 
-          <div className="mt-10 pb-10 border-b border-gray-200">
-            <h2 className="text-lg font-medium text-gray-900">Seller Information</h2>
+          {/* Seller Info */}
+          <div className="mt-10 pb-10 border-b border-border">
+            <h2 className="text-lg font-medium text-foreground">Seller Information</h2>
             <div className="mt-4 flex items-center">
-              <div className="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
-                <span className="text-green-800 font-medium">
+              <div className="flex-shrink-0 h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center">
+                <span className="text-primary font-medium">
                   {product.seller?.username?.charAt(0).toUpperCase() || 'U'}
                 </span>
               </div>
               <div className="ml-4">
-                <h3 className="text-sm font-medium text-gray-900">{product.seller?.username || 'Unknown Seller'}</h3>
+                <h3 className="text-sm font-medium text-foreground">{product.seller?.username || 'Unknown Seller'}</h3>
              </div>
             </div>
           </div>

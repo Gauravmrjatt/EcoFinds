@@ -6,7 +6,13 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -31,7 +37,6 @@ export default function LoginPage() {
       [name]: value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -41,7 +46,7 @@ export default function LoginPage() {
   };
 
   const validateForm = () => {
-    const newErrors= {};
+    const newErrors = {};
 
     if (!formData.email) {
       newErrors.email = 'Email is required';
@@ -60,12 +65,10 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     const result = await login(formData.email, formData.password);
-    
+
     if (result.success) {
       router.push('/products');
     } else {
@@ -79,10 +82,15 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold">Sign in to your account</CardTitle>
+          <CardTitle className="text-center text-2xl font-bold">
+            Sign in to your account
+          </CardTitle>
           <CardDescription className="text-center mt-2">
-            Don't have an account?{' '}
-            <Link href="/auth/register" className="text-green-600 hover:text-green-500">
+            Don&apos;t have an account?{' '}
+            <Link
+              href="/auth/register"
+              className="text-primary hover:underline"
+            >
               Register
             </Link>
           </CardDescription>
@@ -98,11 +106,11 @@ export default function LoginPage() {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
-                className={errors.email ? 'border-red-500' : ''}
+                className={errors.email ? 'border-destructive' : ''}
                 required
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email}</p>
+                <p className="text-sm text-destructive">{errors.email}</p>
               )}
             </div>
 
@@ -115,45 +123,48 @@ export default function LoginPage() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
-                className={errors.password ? 'border-red-500' : ''}
+                className={errors.password ? 'border-destructive' : ''}
                 required
               />
               {errors.password && (
-                <p className="text-sm text-red-500">{errors.password}</p>
+                <p className="text-sm text-destructive">{errors.password}</p>
               )}
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              <div className="flex items-center space-x-2">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                  className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="remember-me"
+                  className="block text-sm text-muted-foreground"
+                >
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
-                <Link href="#" className="font-medium text-green-600 hover:text-green-500">
+                <Link
+                  href="#"
+                  className="font-medium text-primary hover:underline"
+                >
                   Forgot your password?
                 </Link>
               </div>
             </div>
 
             {errors.form && (
-              <div className="text-red-500 text-sm mt-2">{errors.form}</div>
+              <div className="text-destructive text-sm mt-2">
+                {errors.form}
+              </div>
             )}
 
             <div>
-              <Button 
-               
-                type="submit"
-                className="w-full bg-green-600 text-white hover:bg-green-600/80"
-                disabled={loading}
-              >
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Signing in...' : 'Sign in'}
               </Button>
             </div>

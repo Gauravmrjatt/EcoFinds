@@ -1,12 +1,25 @@
 'use client';
 
-import { Card, CardHeader, CardContent, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
-import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -21,7 +34,7 @@ const categories = [
   'Toys & Games',
   'Sports & Outdoors',
   'Books & Media',
-  'Other'
+  'Other',
 ];
 
 export default function ProductsPage() {
@@ -40,19 +53,23 @@ export default function ProductsPage() {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      
+
       if (searchQuery) params.append('search', searchQuery);
       if (selectedCategory && selectedCategory !== 'All Categories') {
         params.append('category', selectedCategory);
       }
       if (sortBy) params.append('sort', sortBy);
-      
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products?${params.toString()}`);
-      
+
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+        }/products?${params.toString()}`
+      );
+
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
-      
+
       const data = await response.json();
       setProducts(data.products || []);
     } catch (error) {
@@ -66,12 +83,17 @@ export default function ProductsPage() {
 
   const addToCart = async (productId) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/cart`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ productId, quantity: 1 })
-      });
-      
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+        }/cart`,
+        {
+          method: 'POST',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ productId, quantity: 1 }),
+        }
+      );
+
       if (response.ok) {
         toast.success('Added to cart!');
       } else {
@@ -86,8 +108,10 @@ export default function ProductsPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Eco-Friendly Products</h1>
-        
+        <h1 className="text-3xl font-bold text-foreground mb-6">
+          Eco-Friendly Products
+        </h1>
+
         {/* Search and Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
@@ -99,9 +123,12 @@ export default function ProductsPage() {
               className="w-full"
             />
           </div>
-          
+
           <div className="flex gap-2">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -113,7 +140,7 @@ export default function ProductsPage() {
                 ))}
               </SelectContent>
             </Select>
-            
+
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Sort by" />
@@ -129,7 +156,7 @@ export default function ProductsPage() {
             </Select>
           </div>
         </div>
-        
+
         {/* Active Filters */}
         {(searchQuery || selectedCategory !== 'All Categories') && (
           <div className="flex gap-2 mb-4">
@@ -161,7 +188,7 @@ export default function ProductsPage() {
 
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : products.length === 0 ? (
         <div className="text-center py-12 mb-8">
@@ -173,7 +200,9 @@ export default function ProductsPage() {
             className="mx-auto mb-4"
             unoptimized
           />
-          <p className="text-gray-500 text-lg mt-5">No products found.</p>
+          <p className="text-muted-foreground text-lg mt-5">
+            No products found.
+          </p>
           {(searchQuery || selectedCategory !== 'All Categories') && (
             <Button
               variant="outline"
@@ -190,7 +219,6 @@ export default function ProductsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
           {products.map((product) => (
-            
             <Card key={product._id || product.id} className="overflow-hidden">
               <CardHeader className="p-0">
                 <div className="aspect-w-3 aspect-h-2 w-full overflow-hidden">
@@ -205,40 +233,50 @@ export default function ProductsPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-4">
-                <CardTitle className="text-lg font-medium text-gray-900">
-                  <Link href={`/products/${product._id || product.id}`} className="hover:text-green-600">
+                <CardTitle className="text-lg font-medium text-foreground">
+                  <Link
+                    href={`/products/${product._id || product.id}`}
+                    className="hover:text-primary"
+                  >
                     {product.title}
                   </Link>
                 </CardTitle>
                 <div className="flex items-center gap-2 mb-2">
-                  <p className="text-sm text-gray-500">Seller: {product.seller?.username || 'Unknown'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Seller: {product.seller?.username || 'Unknown'}
+                  </p>
                   {product.category && (
                     <Badge variant="outline" className="text-xs">
                       {product.category}
                     </Badge>
                   )}
                 </div>
-                <CardDescription className="text-sm text-gray-500 mb-4">
+                <CardDescription className="text-sm text-muted-foreground mb-4">
                   {product.description}
                 </CardDescription>
                 <div className="flex justify-between items-center">
-                  <p className="text-lg font-medium text-gray-900">${product.price?.toFixed(2) || '0.00'}</p>
-                  <div className="text-sm text-gray-500">
-                    {product.createdAt && new Date(product.createdAt).toLocaleDateString()}
+                  <p className="text-lg font-medium text-foreground">
+                    ₹{product.price?.toFixed(2) || '0.00'}
+                  </p>
+                  <div className="text-sm text-muted-foreground">
+                    {product.createdAt &&
+                      new Date(product.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="p-4 pt-0 border-t-0">
-                <div className="flex space-x-2">
-                  <Button 
-                    size="sm" 
-                    className="flex-1 bg-green-600 text-white hover:bg-green-600/80"
+              <CardFooter className="p-4 pt-0 border-t border-border">
+                <div className="flex space-x-2 w-full">
+                  <Button
+                    size="sm"
+                    className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
                     onClick={() => addToCart(product._id || product.id)}
                   >
                     Add to Cart
                   </Button>
-                  <Button variant="outline" size="sm">
-                    <Link href={`/products/${product._id || product.id}`}>View</Link>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/products/${product._id || product.id}`}>
+                      View
+                    </Link>
                   </Button>
                 </div>
               </CardFooter>

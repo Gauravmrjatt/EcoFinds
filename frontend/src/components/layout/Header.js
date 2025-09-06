@@ -5,14 +5,34 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 
+// ✅ Helper function to render auth links
+function renderAuthLinks(authItems, setIsMenuOpen) {
+  return authItems.map((item) => (
+    <Link
+      key={item.name}
+      href={item.href}
+      aria-current={
+        typeof window !== 'undefined' &&
+        window.location.pathname === item.href
+          ? 'page'
+          : undefined
+      }
+      className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md
+                 bg-primary/10 text-primary hover:bg-primary/20
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+      onClick={() => setIsMenuOpen?.(false)}
+    >
+      {item.name}
+    </Link>
+  ));
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated, user, logout, loading } = useAuth();
+  const { isAuthenticated, logout, loading } = useAuth();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   const navItems = [
     { name: 'Home', href: '/' },
@@ -32,12 +52,13 @@ export default function Header() {
       ];
 
   return (
-    <header className="bg-white shadow-sm">
+    <header className="bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo + Nav */}
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-xl font-bold text-green-600">
+              <Link href="/" className="text-xl font-bold text-primary">
                 EcoFinds
               </Link>
             </div>
@@ -46,88 +67,105 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${pathname === item.href
-                    ? 'border-green-500 text-gray-900'
-                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                    }`}
+                  aria-current={pathname === item.href ? 'page' : undefined}
+                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                    pathname === item.href
+                      ? 'border-primary text-foreground'
+                      : 'border-transparent text-muted-foreground hover:border-muted hover:text-foreground'
+                  }`}
                 >
                   {item.name}
                 </Link>
               ))}
             </nav>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <div className="flex space-x-4">
-              {isAuthenticated && (
-                <Link
-                  href="/products/add"
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  <svg
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  Sell
-                </Link>
-              )}
+
+          {/* Desktop Right Section */}
+          <div className="hidden sm:flex sm:items-center space-x-4">
+            {isAuthenticated && (
               <Link
-                href="/cart"
-                className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                href="/products/add"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md
+                           text-primary-foreground bg-primary hover:bg-primary/90
+                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
-                <span className="sr-only">View cart</span>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-4 w-4 mr-1"
                   fill="none"
-                  viewBox="0 0 24 24"
                   stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    strokeWidth="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                   />
                 </svg>
+                Sell
               </Link>
-              {authItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                >
-                  {item.name}
-                </Link>
-              ))}
-              {isAuthenticated && (
-                <button
-                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  onClick={logout}
-                  disabled={loading}
-                >
-                  Logout
-                </button>
-              )}
-            </div>
+            )}
+
+            {/* Cart */}
+            <Link
+              href="/cart"
+              className="relative p-1 rounded-full text-muted-foreground hover:text-foreground
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              <span className="sr-only">View cart</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 
+                     2.293c-.63.63-.184 1.707.707 1.707H17m0 
+                     0a2 2 0 100 4 2 2 0 000-4zm-8 
+                     2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              {/* Badge example (replace with real cart count) */}
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold px-1.5 rounded-full">
+                3
+              </span>
+            </Link>
+
+            {renderAuthLinks(authItems)}
+
+            {isAuthenticated && (
+              <button
+                className="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md
+                           text-destructive-foreground bg-destructive hover:bg-destructive/90
+                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-destructive disabled:opacity-50"
+                onClick={logout}
+                disabled={loading}
+              >
+                {loading ? 'Logging out…' : 'Logout'}
+              </button>
+            )}
           </div>
+
+          {/* Mobile menu button */}
           <div className="-mr-2 flex items-center sm:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground
+                         hover:text-foreground hover:bg-accent focus:outline-none
+                         focus:ring-2 focus:ring-inset focus:ring-primary"
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
                 <svg
                   className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -139,11 +177,9 @@ export default function Header() {
               ) : (
                 <svg
                   className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -158,53 +194,52 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="sm:hidden">
+        <div className="sm:hidden transition-all duration-300 ease-in-out">
           <div className="pt-2 pb-3 space-y-1">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${pathname === item.href
-                  ? 'bg-green-50 border-green-500 text-green-700'
-                  : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
-                  }`}
+                aria-current={pathname === item.href ? 'page' : undefined}
+                className={`block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  pathname === item.href
+                    ? 'bg-primary/10 border-primary text-primary'
+                    : 'border-transparent text-muted-foreground hover:bg-accent hover:border-accent-foreground hover:text-foreground'
+                }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
               </Link>
             ))}
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200">
+          <div className="pt-4 pb-3 border-t border-border">
             <div className="space-y-1">
+              {/* Cart */}
               <Link
                 href="/cart"
-                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium 
+                           text-muted-foreground hover:bg-accent hover:border-accent-foreground hover:text-foreground"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Cart
               </Link>
-              {authItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+
+              {renderAuthLinks(authItems, setIsMenuOpen)}
+
               {isAuthenticated && (
                 <button
-                  className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700"
+                  className="block w-full text-left pl-3 pr-4 py-2 border-l-4 border-transparent 
+                             text-base font-medium text-muted-foreground hover:bg-accent 
+                             hover:border-accent-foreground hover:text-foreground disabled:opacity-50"
                   onClick={() => {
                     logout();
                     setIsMenuOpen(false);
                   }}
                   disabled={loading}
                 >
-                  Logout
+                  {loading ? 'Logging out…' : 'Logout'}
                 </button>
               )}
             </div>

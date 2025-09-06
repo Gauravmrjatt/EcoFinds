@@ -77,10 +77,10 @@ export default function MyListingsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h2>
-              <p className="text-gray-500 mb-6">You need to be logged in to view your listings.</p>
+              <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
+              <p className="text-muted-foreground mb-6">You need to be logged in to view your listings.</p>
               <div className="flex gap-4 justify-center">
-                <Button className="bg-green-600 text-white hover:bg-green-600/80" asChild>
+                <Button asChild>
                   <Link href="/auth/login">Login</Link>
                 </Button>
                 <Button variant="outline" asChild>
@@ -98,10 +98,10 @@ export default function MyListingsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Listings</h1>
-          <p className="text-gray-500 mt-2">Manage your product listings</p>
+          <h1 className="text-3xl font-bold">My Listings</h1>
+          <p className="text-muted-foreground mt-2">Manage your product listings</p>
         </div>
-        <Button className="bg-green-600 text-white hover:bg-green-600/80" asChild>
+        <Button asChild>
           <Link href="/products/add">
             <svg
               className="h-4 w-4 mr-2"
@@ -118,14 +118,14 @@ export default function MyListingsPage() {
 
       {loading ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : products.length === 0 ? (
         <Card>
           <CardContent className="pt-6">
             <div className="text-center py-12">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-12 w-12 text-muted-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 48 48"
@@ -137,10 +137,10 @@ export default function MyListingsPage() {
                   d="M34 40h10v-4a6 6 0 00-10.712-3.714M34 40H14m20 0v-4a9.971 9.971 0 00-.712-3.714M14 40H4v-4a6 6 0 0110.713-3.714M14 40v-4c0-1.313.253-2.566.713-3.714m0 0A9.971 9.971 0 0124 24c4.21 0 7.899 2.61 9.287 6.286"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mt-4">No products yet</h3>
-              <p className="text-gray-500 mt-2">Get started by creating your first product listing.</p>
+              <h3 className="text-lg font-medium mt-4">No products yet</h3>
+              <p className="text-muted-foreground mt-2">Get started by creating your first product listing.</p>
               <div className="mt-6">
-                <Button className="bg-green-600 text-white hover:bg-green-600/80" asChild>
+                <Button asChild>
                   <Link href="/products/add">Add Your First Product</Link>
                 </Button>
               </div>
@@ -154,7 +154,7 @@ export default function MyListingsPage() {
               <CardHeader className="p-0">
                 <div className="aspect-w-3 aspect-h-2 w-full overflow-hidden">
                   <Image
-                    src={product.image || '/placeholder-eco.jpg'}
+                    src={product.images[0] || '/placeholder-eco.jpg'}
                     alt={product.title}
                     width={300}
                     height={200}
@@ -164,25 +164,25 @@ export default function MyListingsPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-4">
-                <CardTitle className="text-lg font-medium text-gray-900 mb-2">
+                <CardTitle className="text-lg font-medium mb-2">
                   {product.title}
                 </CardTitle>
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="outline" className="text-xs">
                     {product.category}
                   </Badge>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-muted-foreground">
                     Listed {new Date(product.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-                <CardDescription className="text-sm text-gray-500 mb-4 line-clamp-2">
+                <CardDescription className="text-sm text-muted-foreground mb-4 line-clamp-2">
                   {product.description}
                 </CardDescription>
                 <div className="flex justify-between items-center">
-                  <p className="text-lg font-medium text-gray-900">
-                    ${product.price?.toFixed(2) || '0.00'}
+                  <p className="text-lg font-medium">
+                    ₹{product.price?.toFixed(2) || '0.00'}
                   </p>
-                  <div className="text-sm text-green-600 font-medium">
+                  <div className="text-sm text-primary font-medium">
                     Active
                   </div>
                 </div>
